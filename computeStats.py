@@ -31,7 +31,7 @@ def computeDiceAndVSI(niiPath1,niiPath2,flip):
         img2 = np.flip(img2,axis=0)
 
     #Correct erroneous values - just for ST
-    img1[img1>13] = 0
+#    img1[img1>13] = 0
     
     labels1 = np.unique(img1)[1:]
     labels2 = np.unique(img2)[1:]
