@@ -6,7 +6,7 @@ Created on Fri Feb  7 08:30:15 2020
 @author: iglehartc
 """
 
-def computeVolume(niiPath):
+def computeVolume(niiPath,label):
     import nibabel as nib
     import numpy as np
     nii = nib.load(niiPath)
@@ -14,7 +14,7 @@ def computeVolume(niiPath):
     pixdim = hdr['pixdim']
     voxVol = pixdim[1] * pixdim[2] * pixdim[3]
     img = nii.dataobj.get_unscaled()
-    nvox = float(np.count_nonzero(img))
+    nvox = float(np.count_nonzero(img==label))
     vol = nvox*voxVol        
     return vol
 
@@ -35,6 +35,8 @@ def computeDiceAndVSI(niiPath1,niiPath2,flip):
     
     labels1 = np.unique(img1)[1:]
     labels2 = np.unique(img2)[1:]
+    labels1 = np.arange(1,8)
+    labels2 = np.arange(1,31)
     diceArray = np.zeros([len(labels1),len(labels2)])
     vsiArray  = np.zeros([len(labels1),len(labels2)])
     
@@ -45,8 +47,12 @@ def computeDiceAndVSI(niiPath1,niiPath2,flip):
             nvox1 = float(np.count_nonzero(img1==l1))
             nvox2 = float(np.count_nonzero(img2==l2))
             nvox  = float(np.count_nonzero((img1==l1)*(img2==l2)))
-            diceArray[i,j] = 2*nvox/(nvox1+nvox2)
-            vsiArray[i,j]  = 1 - np.abs(nvox1 - nvox2)/(nvox1 + nvox2)
+            if (nvox1 + nvox2 > 0):
+                diceArray[i,j] = 2*nvox/(nvox1+nvox2)
+                vsiArray[i,j]  = 1 - np.abs(nvox1 - nvox2)/(nvox1 + nvox2)
+            else:
+                diceArray[i,j] = 0
+                vsiArray[i,j]  = 0
             j = j+1
         i = i+1
     dice = np.max(diceArray,axis=1)

@@ -74,14 +74,14 @@ end
 %% ========================== Main Program ============================== %
 
 %% Initialization parameters
-nc=7; % number of clusters
+nc=11; % number of clusters
 
 s_position=1; % scaling factor of the feature 'position'
 s_odf=55;    % scaling factor of the feature 'ODF'; 55 for DWI with spatial resolution of ~2x2x2mm3, 100 for ~1x1x1mm3; to be determined in other cases
 w_pos=0.5; % weighting factor of the feature 'position'
 w_odf=0.5; % weighting factor of the feature 'ODF'
 
-n_stat=5000; % number of randomly initialized k-means using only the position as a feature
+n_stat=2; % number of randomly initialized k-means using only the position as a feature
 
 % Reading the ODF image
 % h_odf=MRIread(odfFile);

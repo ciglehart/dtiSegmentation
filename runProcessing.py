@@ -17,7 +17,6 @@ dtiFile = 'LIFUP*DTI*.nii.gz'
 templateDir = '/home/charlesiglehart/Documents/Research/template/'
 cases = [1,2,3,4,5,6,7,10,11,12,13,14,15,16,17,19,20,21]
 
-cases = [11]
 for case in cases:
     caseStr = str(case)
     if case < 10:

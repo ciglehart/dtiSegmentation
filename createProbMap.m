@@ -1,34 +1,26 @@
 clear all;
 close all;
 
-N = numel([2,4,5,6,7,8,9,10,11,12,13,14]);
-runDirs = [1:7,10:17,19:21];
-d = [70,102,61];
-outputName = 'stProbMap';
+labels = [2,4:13];
+N = numel(labels);
+outputName = 'stProbMapL';
+fileTemplate = '~/Documents/Research/comparisonStudy/data/stSegmentation/caseNNN_ST_L_TMP.nii.gz';
 
-tau = 0.01;
+runDirs = [1:7,10:17,19:21];
+d = [93,187,68];
+load('~/Documents/Research/comparisonStudy/code/cMap11.mat');
+
 M = numel(runDirs);
-if ispc
-    load('C:\Users\z1102497\Desktop\Main\Misc\dwiSegmentation\cmap.mat');
-else
-    load('/Users/charlesiglehart/Documents/School/Research/data/Monti/templates/cmap.mat');
-end
-c = resampleColormap(cMap,N);
+c = cMap;
+% c = resampleColormap(cMap,N);
+
 counts = zeros(d(1),d(2),d(3),numel(runDirs));
 cMap = zeros(d(1),d(2),d(3),3);
 pMap = zeros(d(1),d(2),d(3),N);
 indicator = zeros(d(1),d(2),d(3));
 maxMap = cMap;
-
-if ispc
-    fileTemplate = 'C:\Users\z1102497\Desktop\Main\Misc\dwiSegmentation\reordered\caseNNN\caseNNNTM.nii.gz';
-    addpath('C:\Users\z1102497\Desktop\Main\Misc\dwiSegmentation\NIfTI_20140122');
-    outputDir = 'C:\Users\z1102497\Desktop\Main\Misc\dwiSegmentation';
-else
-    fileTemplate = '/Users/charlesiglehart/Documents/School/Research/data/Monti/segmentation/caseNNN/caseNNN_ST_MNI.nii.gz';
-    addpath('/Users/charlesiglehart/Documents/School/Research/code/dtiSegmentation/NIfTI_20140122');
-    outputDir = '/Users/charlesiglehart/Documents/School/Research/data/Monti/probMaps';
-end
+addpath('~/Documents/Research/comparisonStudy/code/dtiSegmentation/NIfTI_20140122');
+outputDir = '~/Documents/Research/comparisonStudy/data/probMaps';
 
 for j = 1:M
     
@@ -51,7 +43,7 @@ for i = 1:size(counts,1)
                 
                 for l = 1:N
                     
-                    pMap(i,j,k,l) = numel(find(inds == l));
+                    pMap(i,j,k,l) = numel(find(inds == labels(l)));
                     
                 end
                 

@@ -151,11 +151,11 @@ def generateODFs(dataDir):
     os.system('cp LIFUP*.bval TEMPORARY.bval')
     
     os.system('qboot --data=TEMPORARY_dwiCropped_L.nii.gz --mask=TEMPORARY_dwiCropped_L.nii.gz --bvecs=TEMPORARY.bvec --bvals=TEMPORARY.bval --npeaks=2 --ns=50 --savemeancoeff --lmax=6 --logdir=./TEMPORARY_QBI_logdir/')
-    os.system('mv ./TEMPORARY_QBI_logdir/mean_SHcoeff.nii.gz TEMPORARY_QBI_L.nii.gz')
+    os.system('mv ./TEMPORARY_QBI_logdir/mean_SHcoeff.nii.gz TEMPORARY_QBI_L_ST_mask.nii.gz')
     os.system('rm -rf TEMPORARY_QBI_logdir*')
     
     os.system('qboot --data=TEMPORARY_dwiCropped_R.nii.gz --mask=TEMPORARY_dwiCropped_R.nii.gz --bvecs=TEMPORARY.bvec --bvals=TEMPORARY.bval --npeaks=2 --ns=50 --savemeancoeff --lmax=6 --logdir=./TEMPORARY_QBI_logdir/')
-    os.system('mv ./TEMPORARY_QBI_logdir/mean_SHcoeff.nii.gz TEMPORARY_QBI_R.nii.gz')
+    os.system('mv ./TEMPORARY_QBI_logdir/mean_SHcoeff.nii.gz TEMPORARY_QBI_R_ST_mask.nii.gz')
     os.system('rm -rf TEMPORARY_QBI_logdir*')
 
 def maskODFs(dataDir):
@@ -167,11 +167,11 @@ def maskODFs(dataDir):
     os.chdir(dataDir)
     print('Cropping ODFs to respective thalamus masks...')
 
-    os.system('mrcrop TEMPORARY_L_mask.nii.gz TEMPORARY_crop_L.nii.gz -mask TEMPORARY_L_mask.nii.gz -force')
-    os.system('fslsplit TEMPORARY_QBI_L.nii.gz TEMPORARY_QBI_L_ -t')
+    os.system('mrcrop TEMPORARY_L_mask.nii.gz TEMPORARY_crop_L_ST_mask.nii.gz -mask TEMPORARY_L_mask.nii.gz -force')
+    os.system('fslsplit TEMPORARY_QBI_L_ST_mask.nii.gz TEMPORARY_QBI_L_ST_mask -t')
     
-    os.system('mrcrop TEMPORARY_R_mask.nii.gz TEMPORARY_crop_R.nii.gz -mask TEMPORARY_R_mask.nii.gz -force')
-    os.system('fslsplit TEMPORARY_QBI_R.nii.gz TEMPORARY_QBI_R_ -t')
+    os.system('mrcrop TEMPORARY_R_mask.nii.gz TEMPORARY_crop_R_ST_mask.nii.gz -mask TEMPORARY_R_mask.nii.gz -force')
+    os.system('fslsplit TEMPORARY_QBI_R_ST_mask.nii.gz TEMPORARY_QBI_R_ST_mask -t')
 
     nCoeffs = 28
     for j in range(nCoeffs):
@@ -179,12 +179,12 @@ def maskODFs(dataDir):
         if j < 10:
             suffix = '0'+suffix
             
-        fileName = 'TEMPORARY_QBI_L_'+suffix+'.nii.gz'
-        os.system('mrcalc TEMPORARY_crop_L.nii.gz '+fileName+' -mult '+fileName+' -force')
+        fileName = 'TEMPORARY_QBI_L_ST_mask'+suffix+'.nii.gz'
+        os.system('mrcalc TEMPORARY_crop_L_ST_mask.nii.gz '+fileName+' -mult '+fileName+' -force')
         
-        fileName = 'TEMPORARY_QBI_R_'+suffix+'.nii.gz'
-        os.system('mrcalc TEMPORARY_crop_R.nii.gz '+fileName+' -mult '+fileName+' -force')
+        fileName = 'TEMPORARY_QBI_R_ST_mask'+suffix+'.nii.gz'
+        os.system('mrcalc TEMPORARY_crop_R_ST_mask.nii.gz '+fileName+' -mult '+fileName+' -force')
         
-    os.system('mrconvert TEMPORARY_QBI_L_[].nii.gz TEMPORARY_QBI_L_masked.nii.gz -force')
+    os.system('mrconvert TEMPORARY_QBI_L_ST_mask[].nii.gz TEMPORARY_QBI_L_ST_masked.nii.gz -force')
     
-    os.system('mrconvert TEMPORARY_QBI_R_[].nii.gz TEMPORARY_QBI_R_masked.nii.gz -force')
+    os.system('mrconvert TEMPORARY_QBI_R_ST_mask[].nii.gz TEMPORARY_QBI_R_ST_masked.nii.gz -force')
