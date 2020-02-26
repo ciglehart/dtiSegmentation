@@ -11,20 +11,20 @@ import numpy as np
 import nibabel as nib
 from matplotlib.colors import ListedColormap
 
-dataPath = '/home/iglehartc/Documents/Main/Misc/data/qbSegmentation'
-outputDir = '/home/iglehartc/Documents/Main/Misc/data/probMaps'
-pMapOutputName = 'qbProbMapCombined.nii.gz'
-maxMapOutputName = 'qbMaxMapCombined.nii.gz'
+dataPath = '/home/charlesiglehart/Documents/Research/comparisonStudy/data/rsFMRISegmentation'
+outputDir = '/home/charlesiglehart/Documents/Research/comparisonStudy/data/probMaps'
+pMapOutputName = 'testP.nii.gz'
+maxMapOutputName = 'testM.nii.gz'
 cases = [1,2,3,4,5,6,7,10,11,12,13,14,15,16,17,19,20,21]
-labels = np.arange(1,8)
+labels = np.arange(1,31)
 dims = [93,187,68,len(cases)]
 
 ims = np.zeros(dims)
 for i in range(len(cases)):
-    niiPath = os.path.join(dataPath,'case'+str(cases[i])+'_QB_L_TMP.nii.gz')
+    niiPath = os.path.join(dataPath,'case'+str(cases[i])+'_RS_L_DTI_reordered.nii.gz')
     nii = nib.load(niiPath)
     ims[:,:,:,i] = nii.dataobj.get_unscaled()
-    niiPath = os.path.join(dataPath,'case'+str(cases[i])+'_QB_R_TMP.nii.gz')
+    niiPath = os.path.join(dataPath,'case'+str(cases[i])+'_RS_R_DTI_reordered.nii.gz')
     nii = nib.load(niiPath)
     ims[:,:,:,i] = ims[:,:,:,i] + nii.dataobj.get_unscaled()
     
@@ -61,7 +61,8 @@ for i in range(dims[0]):
                 pMap[i,j,k,3] = np.sum(counts[i,j,k,:])/(len(labels)*len(cases))
                 maxMap[i,j,k,:] = stcmap.colors[np.argmax(counts[i,j,k,:])]
                 
-pMap[:,:,:,3] = pMap[:,:,:,3]/np.max(pMap[:,:,:,3])    
+pMap[:,:,:,3] = pMap[:,:,:,3]/np.max(pMap[:,:,:,3])
+maxMap[:,:,:,3] = pMap[:,:,:,3]
 
 imgOut1 = pMap
 imgOut2 = maxMap    

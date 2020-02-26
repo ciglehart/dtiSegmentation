@@ -20,7 +20,7 @@ for i = 1:numel(nNuclei)
         
     end
     
-    seedCentroids = round(seedCentroids/nIterations);
+    seedCentroids = seedCentroids/nIterations;
     
 end
 

@@ -1,5 +1,5 @@
 close all;
-segType = 'ST'; %QB, ST, RS
+segType = 'RS'; %QB, ST, RS
 space = 'TMP'; %DWI, WMN, T1, TMP, MNI
 grayRange = [0.25,0.75]; %Gray scale for the template image
 sagSlice = 36;
@@ -36,7 +36,7 @@ baseNii = load_untouch_nii(fullfile(templateDir,baseImage));
 centroids = zeros(3,nLabels,numel(runDirs));
 for i = 1:numel(runDirs)
     
-    fileName = ['case',num2str(runDirs(i)),'_',segType,'_L_',space,'.nii.gz'];
+    fileName = ['case',num2str(runDirs(i)),'_',segType,'_L_',space,'_reordered.nii.gz'];
     nii = load_untouch_nii(fullfile(strrep(segmentationDir,'AAA',num2str(runDirs(i))),fileName));
     im = fix(nii.img);
     
